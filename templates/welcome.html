@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffff, #ffff);
+      color: black;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .welcome-box {
+      text-align: center;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-box">
+    <h1>Welcome, {{ current_user.username }} 👋</h1>
+    <p>You’re now logged in. Redirecting to home...</p>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      window.location.href = "/home";  // Redirect to /home after 3 seconds
+    }, 3000);
+  </script>
+</body>
+</html>
