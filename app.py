@@ -5,6 +5,7 @@ from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from flask.cli import with_appcontext
 
+# Import the required prediction functions and models
 from prediction import generate_labels, predict_summary
 from models import db, User
 from auth import auth  # Ensure auth blueprint is imported
@@ -23,11 +24,11 @@ else:
     with open(secret_key_path, "wb") as f:
         f.write(secret_key)
 
-# Set Flask secret key
+# Initialize Flask application
 app = Flask(__name__)
 app.config["SECRET_KEY"] = secret_key
 
-# Configuration for PostgreSQL
+# Configuration for PostgreSQL database
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "postgresql://postgres:kQznCzQIRXpBDZxdStlskAdXGDsytkSb@shuttle.proxy.rlwy.net:34298/railway"
 )
@@ -43,6 +44,7 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"  # Use the correct blueprint route
 login_manager.init_app(app)
 
+# User loader function for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -62,7 +64,7 @@ def welcome():
         return render_template("welcome.html", user=current_user)
     return redirect(url_for('auth.login'))
 
-# Your other routes remain unchanged...
+# Define additional routes for the app
 
 @app.route("/home")
 def home():
@@ -100,6 +102,7 @@ def files():
         return render_template("files.html", user=current_user)
     return redirect(url_for('auth.login'))
 
+# Prediction routes for handling API calls
 @app.route("/predict_category", methods=["POST"])
 def predict_category_endpoint():
     try:
@@ -132,21 +135,26 @@ def predict_summary_endpoint():
 @app.cli.command("db_init")
 @with_appcontext
 def db_init():
+    """Initialize the database."""
     from flask_migrate import init
     init()
 
 @app.cli.command("db_migrate")
 @with_appcontext
 def db_migrate():
+    """Create migration files for the database."""
     from flask_migrate import migrate
     migrate(message="Initial migration")
 
 @app.cli.command("db_upgrade")
 @with_appcontext
 def db_upgrade():
+    """Apply the migrations to upgrade the database."""
     from flask_migrate import upgrade
     upgrade()
 
+# Running the application
 if __name__ == "__main__":
+    # Get the port from the environment variable, default to 8080
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
