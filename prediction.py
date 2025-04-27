@@ -220,7 +220,6 @@
 import os
 import torch
 import fitz
-import PyMuPDF as fitz  # PyMuPDF for PDF extraction  # PyMuPDF for PDF extraction
 import pandas as pd
 from docx import Document  # For DOCX file extraction
 from transformers import T5Tokenizer, T5ForConditionalGeneration
